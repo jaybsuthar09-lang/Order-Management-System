@@ -108,17 +108,34 @@ export async function getDb() {
   if (!_db) {
     try {
       const dbPath = getDatabasePath();
+
+      console.log("Database path:", dbPath);
+
       fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+
       _sqlite = new Database(dbPath);
+
       initializeSchema(_sqlite);
+
       _db = drizzle(_sqlite);
+
+      console.log("Database initialized successfully");
     } catch (error) {
-      console.warn("[Database] Failed to initialize:", error);
-      _db = null;
+      console.error("================================");
+      console.error("DATABASE INITIALIZATION FAILED");
+      console.error(error);
+      console.error(
+        error instanceof Error ? error.stack : JSON.stringify(error, null, 2)
+      );
+      console.error("================================");
+
+      throw error;   // <-- DO NOT return null
     }
   }
+
   return _db;
 }
+
 
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) {
