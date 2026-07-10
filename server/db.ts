@@ -222,11 +222,25 @@ export async function getCustomerById(id: number) {
 }
 
 export async function createCustomer(data: typeof customers.$inferInsert) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
+  try {
+    console.log("Customer Input:", data);
 
-  const [created] = await db.insert(customers).values(data).returning();
-  return created;
+    const db = await getDb();
+
+    if (!db) {
+      throw new Error("Database is NULL");
+    }
+
+    const [created] = await db.insert(customers).values(data).returning();
+
+    console.log("Customer Created:", created);
+
+    return created;
+  } catch (e) {
+    console.error("CREATE CUSTOMER FAILED");
+    console.error(e);
+    throw e;
+  }
 }
 
 export async function updateCustomer(id: number, data: Partial<typeof customers.$inferInsert>) {
@@ -278,11 +292,25 @@ export async function getProductById(id: number) {
 }
 
 export async function createProduct(data: typeof products.$inferInsert) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
+  try {
+    console.log("Product Input:", data);
 
-  const [created] = await db.insert(products).values(data).returning();
-  return created;
+    const db = await getDb();
+
+    if (!db) {
+      throw new Error("Database is NULL");
+    }
+
+    const [created] = await db.insert(products).values(data).returning();
+
+    console.log("Product Created:", created);
+
+    return created;
+  } catch (e) {
+    console.error("CREATE PRODUCT FAILED");
+    console.error(e);
+    throw e;
+  }
 }
 
 export async function updateProduct(id: number, data: Partial<typeof products.$inferInsert>) {
